@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String TAG = RestaurantListActivity.class.getSimpleName();
     //private SharedPreferences mSharedPreferences;
     //private SharedPreferences.Editor mEditor;
 
@@ -43,6 +44,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getInstance()
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
+
+        //add value event listener
+        mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            for(DataSnapshot locationSnapshot: dataSnapshot.getChildren()){
+                String location=locationSnapshot.getValue().toString();
+                Log.d("locations updated","location "+location);
+            }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         super.onCreate(savedInstanceState);
