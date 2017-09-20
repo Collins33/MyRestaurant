@@ -37,31 +37,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Bind(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
-    @Bind(R.id.locationEditText) EditText mLocationEditText;
+
     @Bind(R.id.appNameTextView) TextView mAppNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mSearchedLocationReference=FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
 
-        //add value event listener
-       mSearchLocationReferenceListener= mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-            for(DataSnapshot locationSnapshot: dataSnapshot.getChildren()){
-                String location=locationSnapshot.getValue().toString();
-                Log.d("locations updated","location "+location);
-            }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
 
 
         super.onCreate(savedInstanceState);
@@ -80,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == mFindRestaurantsButton) {
-            String location = mLocationEditText.getText().toString();
-            saveLocationToFirebase(location);
+            //String location = mLocationEditText.getText().toString();
+            //saveLocationToFirebase(location);
             //if(!(location).equals("")) {
                 //addToSharedPreferences(location);
             //}
@@ -90,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void saveLocationToFirebase(String location){
-        mSearchedLocationReference.push().setValue(location);
-    }
+    //public void saveLocationToFirebase(String location){
+        //mSearchedLocationReference.push().setValue(location);
+    //}
 
     @Override
     public void onDestroy(){

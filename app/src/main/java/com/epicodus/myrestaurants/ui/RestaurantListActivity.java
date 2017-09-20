@@ -3,11 +3,16 @@ package com.epicodus.myrestaurants.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.epicodus.myrestaurants.Constants;
 import com.epicodus.myrestaurants.R;
@@ -26,6 +31,7 @@ import okhttp3.Response;
 
 public class RestaurantListActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
     private String mRecentAddress;
     public static final String TAG = RestaurantListActivity.class.getSimpleName();
     //to test on the log cat
@@ -56,6 +62,38 @@ public class RestaurantListActivity extends AppCompatActivity {
             getRestaurants(mRecentAddress);
         }
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        //inflate the view
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menu_search,menu);
+        //bind the views
+        ButterKnife.bind(this);
+        //define mSharedpref and mEditor
+        mSharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor=mSharedPreferences.edit();
+        //get the menu search item
+        MenuItem menuItem=menu.findItem(R.id.action_search);
+        SearchView searchView=(SearchView) MenuItemCompat.getActionView(menuItem);
+          //set query listener on the searchview
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query){
+                addToSharedPreferences(query);
+                getRestaurants(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 
     private void getRestaurants(String location) {
         final YelpService yelpService = new YelpService();
@@ -85,5 +123,9 @@ public class RestaurantListActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+   //add to shared preference
+    private void addToSharedPreferences(String location){
+        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY,location).apply();
     }
 }
