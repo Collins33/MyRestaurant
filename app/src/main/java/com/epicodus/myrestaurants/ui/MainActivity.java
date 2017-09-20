@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.epicodus.myrestaurants.Constants;
 import com.epicodus.myrestaurants.R;
+import com.epicodus.myrestaurants.SavedRestaurantListActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -99,6 +100,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSearchedLocationReference.removeEventListener(mSearchLocationReferenceListener);
 
 
+    }
+
+    public void savedRestaurant(View view){
+        Intent intent = new Intent(MainActivity.this, SavedRestaurantListActivity.class);
+        startActivity(intent);
     }
               //takes user inputed location as an argument
     //public void addToSharedPreferences(String location){
