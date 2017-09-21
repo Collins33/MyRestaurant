@@ -1,5 +1,6 @@
 package com.epicodus.myrestaurants.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private ProgressDialog mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,13 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         auth=FirebaseAuth.getInstance();
 
         mCreateUserButton.setOnClickListener(this);
+        createAuthProgressDialod();
+    }
+    private void createAuthProgressDialod(){
+        mProgressBar=new ProgressDialog(this);
+        mProgressBar.setTitle("loading...");
+        mProgressBar.setMessage("Authenticating with Firebase...");
+        mProgressBar.setCancelable(false);
     }
     @Override
     public void onStart() {
@@ -108,10 +118,18 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
+        boolean validEmail = isValidEmail(email);
+        boolean validName = isValidName(name);
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        if (!validEmail || !validName || !validPassword) return;
+
+        mProgressBar.show();
+
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-             if(task.isSuccessful()){
+             mProgressBar.dismiss();
+                if(task.isSuccessful()){
                  Log.d(TAG, "Authentication successful");
              }else{
                  Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
