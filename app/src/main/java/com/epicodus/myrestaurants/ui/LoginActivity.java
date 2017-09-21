@@ -24,5 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     public void registerAccount (View view){
         Intent intent=new Intent(this,CreateAccountActivity.class);
         startActivity(intent);
+        //terminate the activity after we leave it
+        finish();
     }
 }
