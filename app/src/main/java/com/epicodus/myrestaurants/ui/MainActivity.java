@@ -108,13 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //mSearchedLocationReference.push().setValue(location);
     //}
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        mSearchedLocationReference.removeEventListener(mSearchLocationReferenceListener);
 
-
-    }
 
     public void savedRestaurant(View view){
         Intent intent = new Intent(MainActivity.this, SavedRestaurantListActivity.class);
